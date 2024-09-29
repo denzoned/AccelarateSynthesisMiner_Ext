@@ -2,6 +2,7 @@ from collections import defaultdict
 from enum import Enum
 
 import numpy as np
+import pandas as pd
 # from pm4py import PetriNet, Marking
 # from pm4py.algo.conformance.alignments.decomposed import algorithm as decomp_alignments
 # from pm4py import conformance_diagnostics_token_based_replay as token_replay_factory
@@ -89,7 +90,8 @@ def place_fitness_old(net, initial_marking, final_marking, tbc_dict, log, thresh
             "tau_freq_underfed": False,
             "tau_freq_overfed": False,
             "tau_freq_fitting": True,
-            "remove": False
+            "remove": False,
+            "Iteration": 0
         })
     # Get variants from the log
     variants = variants_module.get_variants(log)
@@ -177,17 +179,26 @@ def place_fitness_old(net, initial_marking, final_marking, tbc_dict, log, thresh
         if (metrics['tau_rel_overfed'] or metrics['tau_rel_underfed']) and ('normal' in metrics['place_type']):
             metrics['remove'] = True
             # print('Place should be removed because it is not fitting: ', place)
-        # if place_type is not given, remove the place if it is not fitting
+    # if place_type is not given, remove the place if it is not fitting
 
-    # actually remove the place from tbc_dict['places'], based on index in tbc_dict['place_to_transitions'] where
-    # 'remove' is True
     print('Given places: ', tbc_dict['places'])
     for place in tbc_dict['places']:
         if places_info[place]['remove']:
             tbc_dict['places'].remove(place)
             print('Removed place: ', place)
 
+    places_df = pd.DataFrame.from_dict(places_info, orient='index')
 
+    try:
+        places_df_old = pd.read_csv('places.csv')
+        max_iter = places_df_old['Iteration'].max()
+        places_df['Iteration'] = max_iter + 1
+
+        places_df = pd.concat([places_df_old, places_df], axis=0)
+    except:
+        pass
+
+    places_df.to_csv('places.csv', index=False)
 
     return tbc_dict
 

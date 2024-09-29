@@ -1,4 +1,4 @@
-# AccelarateSynthesisMiner
+# AccelarateSynthesisMiner Extended
 Code base and experimental results for the paper "Accelerating Synthesis-Rules-Based Process Discovery", which aims to show accleration improvements for the Synthesis Miner (https://github.com/tsunghao-huang/synthesisRulesMiner) [1], [2].
 
 # Experiments
@@ -28,6 +28,10 @@ They are stored in the /experiments/ex2 folder.
 The experiment tested the combined usage of the log heuristics extension and minimal subnet extraction extension.
 Results contain the generation and evaluation times as well as quality measures of the selected models for each activity of the selected log/model.
 They are stored in the /experiments/ex2 folder. 
+
+## Experiment Places
+This experiment extends the Experiment 1 by adding a place analysis method.
+
 
 # 
 [1] Huang, T., van der Aalst, W.M.P.: Discovering sound free-choice workflow nets with non-block structures. In: EDOC. Lecture Notes in Computer Science, vol.13585, pp. 200–216. Springer (2022)

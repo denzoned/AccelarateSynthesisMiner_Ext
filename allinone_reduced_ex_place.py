@@ -922,6 +922,10 @@ if __name__ == "__main__":
     # go through each transition
     all_act = set()
     i = 0
+
+    if os.path.exists('places.csv'):
+        os.remove('places.csv')
+
     for t in net.transitions:
         if t.label is not None and str(t.label) not in ['End', 'Closed', 'end']:
             net_copy = copy.deepcopy(net)
@@ -936,8 +940,12 @@ if __name__ == "__main__":
             # pm4py.view_petri_net(new_net_temp, new_im_temp, new_fm_temp, format='svg')
             pm4py.save_vis_petri_net(new_net_temp, new_im_temp, new_fm_temp,
                                      file_path=os.path.join('results', 'nets', 'ex_place',
-                                                            filename.split('.')[0] + '_' + threshold + '_' + str(
-                                                                t.label) + '.svg'))
+                                                            filename.split('.')[0] + '_' + threshold + '_' + str(t.label) + '.svg'))
+            place_filename = 'place_results_' + filename.split('.')[0] + threshold + '.csv'
+
+            places_df = pd.read_csv('places.csv')
+            places_df.to_csv(os.path.join('results', 'analysis', 'ex_place', place_filename))
+
             export_results(cut_act_dict, filename, threshold, old)
     print('All single iterations done')
     sys.exit()
