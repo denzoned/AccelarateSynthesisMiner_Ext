@@ -850,6 +850,14 @@ if __name__ == "__main__":
         filename = 'helpdesk_with_end.xes'
         net, im, fm = pm4py.read_pnml('models/helpdesk_04.pnml')
         init_threshold = 0.4
+    elif run == 'traffic_2':
+        filename = 'traffic.xes.gz'
+        net, im, fm = pm4py.read_pnml('models/traffic_02.pnml')
+        init_threshold = 0.2
+    elif run == 'traffic_4':
+        filename = 'traffic.xes.gz'
+        net, im, fm = pm4py.read_pnml('models/traffic_04.pnml')
+        init_threshold = 0.4
     else:
         raise ValueError('Invalid run parameter')
 
