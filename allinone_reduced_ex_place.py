@@ -228,12 +228,38 @@ def find_prev_foll_skip_loop(log, t_add, petri_net: PetriNet):
         t_add in variant and elem in variant and variant.index(t_add) > variant.index(elem) for variant in variants)}
 
     # Remove elements that are before and after
+
+    threshold = 0.9
+    filtered_prev = set()
+    filtered_foll = set()
+
+    for elem in prev:
+        before_count = sum(1 for variant in variants if
+                           t_add in variant and elem in variant and variant.index(elem) < variant.index(t_add))
+        after_count = sum(1 for variant in variants if
+                          t_add in variant and elem in variant and variant.index(elem) > variant.index(t_add))
+        relative_value = (before_count - after_count) / (before_count + after_count + 1)
+        if relative_value > threshold:
+            filtered_prev.add(elem)
+
+    for elem in foll:
+        before_count = sum(1 for variant in variants if
+                           t_add in variant and elem in variant and variant.index(elem) < variant.index(t_add))
+        after_count = sum(1 for variant in variants if
+                          t_add in variant and elem in variant and variant.index(elem) > variant.index(t_add))
+        relative_value = (after_count - before_count) / (before_count + after_count + 1)
+        if relative_value > threshold:
+            filtered_foll.add(elem)
+
+
     prev -= prev_to_prev_foll
     foll -= foll_to_prev_foll
     prev.discard(t_add)
     foll.discard(t_add)
-    return prev, foll, skip, loop
-
+    print("Check if same prev, foll used as before")
+    print(filtered_prev, prev)
+    print(filtered_foll, foll)
+    return filtered_prev, filtered_foll, skip, loop
 
 def remove_implicit_place(net, im, fm):
     for place in list(net.places):
